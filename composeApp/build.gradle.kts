@@ -150,9 +150,6 @@ compose.desktop {
     }
 }
 
-
 tasks.withType<Test>().configureEach {
-    project.logger.info("use Junit 5")
-    useJUnitPlatform()
-    exclude("fr/pitdev/whois/utils/UsingContext.class")
+    exclude("fr/pitdev/article/kmtest/utils/UsingContext.class")
 }
