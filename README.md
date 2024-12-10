@@ -22,3 +22,5 @@ You can open the web application by running the `:composeApp:wasmJsBrowserDevelo
 
 
 https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html
+
+https://github.com/apter-tech/junit5-robolectric-extension

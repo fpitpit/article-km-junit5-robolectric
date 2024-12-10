@@ -105,6 +105,8 @@ kotlin {
 }
 
 android {
+    apply(plugin = libs.plugins.junit5.robolectric.get().pluginId)
+
     namespace = "fr.pitdev.article.kmtest"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -146,4 +148,11 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+
+tasks.withType<Test>().configureEach {
+    project.logger.info("use Junit 5")
+    useJUnitPlatform()
+    exclude("fr/pitdev/whois/utils/UsingContext.class")
 }
