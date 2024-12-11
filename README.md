@@ -112,4 +112,5 @@ This guide explains how to set up unit tests for a Kotlin Multiplatform applicat
 **Learn More:**
 
 *   [Kover Repository](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/Kotlin/kotlinx-kover)
+*   [JUnit5 Robolectric Extension (Experimental)](https://github.com/apter-tech/junit5-robolectric-extension)
 
