@@ -10,6 +10,7 @@ class AppTest: UsingContext() {
     @Test
     fun myTest() = runComposeUiTest {
         setContent {
+            initPreviewContextConfiguration()
             MaterialTheme {
                 App()
             }

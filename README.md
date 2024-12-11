@@ -1,26 +1,114 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop.
+## Testing a Kotlin Multiplatform App with Compose and Robolectric
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+This guide explains how to set up unit tests for a Kotlin Multiplatform application using Compose and Robolectric.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+**Why this is important:**
 
+*   **Shared code:** Kotlin Multiplatform lets you share code between Android, iOS, Desktop, and Web.
+*   **Efficient testing:** Robolectric enables fast unit tests by simulating the Android environment on your development machine.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+**What you'll learn:**
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
+*   How to configure a Kotlin Multiplatform project for testing.
+*   How to write instrumented tests that run on a real Android device or emulator.
+*   How to write unit tests using Robolectric and JUnit 5.
+*   How to increase code coverage with Kover.
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+**Steps:**
 
+1.  **Project Setup:**
 
-https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html
+    *   Create a `commonTest` directory in your `composeApp` module.
+    *   Add the following dependencies to your `build.gradle.kts`:
 
-https://github.com/apter-tech/junit5-robolectric-extension
+        ```kotlin
+        kotlin {
+            sourceSets {
+                commonTest.dependencies {
+                    implementation(kotlin("test"))
+                    implementation(compose.uiTest)
+                }
+                androidInstrumentedTest.dependencies {
+                    implementation(compose.uiTest)
+                }
+            }
+            androidTarget {
+                instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+                dependencies {
+                    debugImplementation(libs.androidx.ui.test.manifest)
+                }
+            }
+        }
+        android {
+            defaultConfig {
+                testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            }
+        }
+        ```
+
+2.  **Write a Simple Test:**
+
+    *   Create a test file (e.g., `AppTest.kt`) in `commonTest`.
+    *   Write a test using `runComposeUiTest` to interact with a Compose component:
+
+        ```kotlin
+        class AppTest: UsingContext() {
+            @Test
+            fun myTest() = runComposeUiTest {
+                setContent {
+                    MaterialTheme {
+                        App()
+                    }
+                }
+                onNodeWithText("Click me!").performClick()
+            }
+        }
+        ```
+
+3.  **Run Instrumented Test:**
+
+    *   Launch an Android emulator.
+    *   Run the test: `./gradlew composeApp:connectedAndroidTest`
+
+4.  **Add Robolectric and JUnit 5:**
+
+    *   Upgrade to Kotlin 2.1.0.
+    *   Add the Robolectric plugin and dependencies.
+    *   Apply the plugin in your `build.gradle.kts`.
+
+5.  **Create and Implement `UsingContext`:**
+
+    *   Create an `expect` class named `UsingContext` in `commonTest`.
+    *   Implement the `actual` class for Android in `androidTest`, configuring Robolectric.
+    *   Implement empty `actual` classes for other platforms (iOS, Desktop, Web).
+
+6.  **Add an Activity to the Manifest:**
+
+    *   Add an empty `ComponentActivity` to your `AndroidManifest.xml`.
+
+7.  **Run Robolectric Tests:**
+
+    *   Run: `./gradlew composeApp:testDebugUnitTest`
+
+8.  **Exclude `UsingContext` from `check` Task:**
+
+    *   Prevent JUnit5 from misinterpreting `UsingContext` as a test class:
+
+        ```kotlin
+        tasks.withType<Test>().configureEach {
+            exclude("fr/pitdev/article/kmtest/utils/UsingContext.class")
+        }
+        ```
+
+    *   Run the check task: `./gradlew check`
+
+**Bonus: Code Coverage with Kover**
+
+1.  Add Kover dependencies and plugin.
+2.  Apply the plugin and configure Kover in your `build.gradle.kts`.
+3.  Generate an HTML report: `gradlew koverHtmlReport`
+
+**Learn More:**
+
+*   [Kover Repository](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/Kotlin/kotlinx-kover)
+*   Example Project [https://github.com/fpitpit/article-km-junit5-robolectric]
