@@ -1,3 +1,4 @@
+![header](./images/header.png)
 ## Testing a Kotlin Multiplatform App with Compose and Robolectric
 
 This guide explains how to set up unit tests for a Kotlin Multiplatform application using Compose and Robolectric.
@@ -111,4 +112,4 @@ This guide explains how to set up unit tests for a Kotlin Multiplatform applicat
 **Learn More:**
 
 *   [Kover Repository](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/Kotlin/kotlinx-kover)
-*   Example Project [https://github.com/fpitpit/article-km-junit5-robolectric]
+
