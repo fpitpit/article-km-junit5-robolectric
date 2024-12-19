@@ -3,6 +3,8 @@
 
 This guide explains how to set up unit tests for a Kotlin Multiplatform application using Compose and Robolectric.
 
+ [Testing a Kotlin Multiplatform App with Compose and Robolectric](https://medium.com/publicis-sapient-france/testing-a-kotlin-multiplatform-app-with-compose-and-robolectric-45df4bef20e0)
+
 **Why this is important:**
 
 *   **Shared code:** Kotlin Multiplatform lets you share code between Android, iOS, Desktop, and Web.
